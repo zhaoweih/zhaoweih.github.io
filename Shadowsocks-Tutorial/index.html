@@ -1,0 +1,238 @@
+<!DOCTYPE html><html lang="zh-CN" dir="auto" data-theme="auto"> <head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><meta name="robots" content="index, follow"><title>🐱给小白的Shadowsocks翻墙教程 | Stanley&#39;s Blog</title><meta name="keywords" content="Shadowsocks, ChatGPT, bypass, gfw, China, vultr, 翻墙, 教程, 小白"><meta name="description" content="从零开始搭建 Shadowsocks：购买 Vultr VPS、选择 Debian 12、一键脚本安装 libev 服务端，到 Windows/macOS 客户端配置，全程图文，小白也能照着做。"><meta name="author" content="Stanley Zhao"><link rel="canonical" href="https://zhaoweih.github.io/Shadowsocks-Tutorial/"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,300..600&family=DM+Sans:wght@400;500;700&display=swap"><link rel="icon" href="/images/catmeme1.jpeg"><link rel="apple-touch-icon" href="/images/catmeme1.jpeg"><link rel="mask-icon" href="/images/catmeme1.jpeg"><meta name="theme-color" content="#faf9f5"><meta name="msapplication-TileColor" content="#faf9f5"><link rel="alternate" type="application/rss+xml" href="/index.xml" title="rss"><meta property="og:title" content="🐱给小白的Shadowsocks翻墙教程"><meta property="og:description" content="从零开始搭建 Shadowsocks：购买 Vultr VPS、选择 Debian 12、一键脚本安装 libev 服务端，到 Windows/macOS 客户端配置，全程图文，小白也能照着做。"><meta property="og:type" content="article"><meta property="og:url" content="https://zhaoweih.github.io/Shadowsocks-Tutorial/"><meta property="og:site_name" content="Stanley's Blog"><meta property="og:locale" content="zh_CN"><meta property="og:image" content="https://zhaoweih.github.io/images/og-image.png"><meta property="og:image:alt" content="🐱给小白的Shadowsocks翻墙教程"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="article:published_time" content="2026-09-04T15:09:49.000Z"><meta property="article:author" content="Stanley Zhao"><meta property="article:tag" content="Shadowsocks"><meta property="article:tag" content="ChatGPT"><meta property="article:tag" content="bypass"><meta property="article:tag" content="gfw"><meta property="article:tag" content="China"><meta property="article:tag" content="vultr"><meta property="article:tag" content="翻墙"><meta property="article:tag" content="教程"><meta property="article:tag" content="小白"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="🐱给小白的Shadowsocks翻墙教程"><meta name="twitter:description" content="从零开始搭建 Shadowsocks：购买 Vultr VPS、选择 Debian 12、一键脚本安装 libev 服务端，到 Windows/macOS 客户端配置，全程图文，小白也能照着做。"><meta name="twitter:image" content="https://zhaoweih.github.io/images/og-image.png"><script type="application/ld+json">[{"@context":"https://schema.org","@type":"BlogPosting","headline":"🐱给小白的Shadowsocks翻墙教程","description":"从零开始搭建 Shadowsocks：购买 Vultr VPS、选择 Debian 12、一键脚本安装 libev 服务端，到 Windows/macOS 客户端配置，全程图文，小白也能照着做。","image":"https://zhaoweih.github.io/images/og-image.png","url":"https://zhaoweih.github.io/Shadowsocks-Tutorial/","mainEntityOfPage":{"@type":"WebPage","@id":"https://zhaoweih.github.io/Shadowsocks-Tutorial/"},"datePublished":"2026-09-04T15:09:49.000Z","dateModified":"2026-09-04T15:09:49.000Z","author":{"@type":"Person","name":"Stanley Zhao","url":"https://zhaoweih.github.io/"},"publisher":{"@type":"Person","name":"Stanley Zhao","url":"https://zhaoweih.github.io/"},"keywords":"Shadowsocks, ChatGPT, bypass, gfw, China, vultr, 翻墙, 教程, 小白","articleSection":"Shadowsocks","inLanguage":"zh-CN"},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://zhaoweih.github.io/"},{"@type":"ListItem","position":2,"name":"Posts","item":"https://zhaoweih.github.io/posts/"},{"@type":"ListItem","position":3,"name":"🐱给小白的Shadowsocks翻墙教程","item":"https://zhaoweih.github.io/Shadowsocks-Tutorial/"}]}]</script><noscript><style>
+      #theme-toggle, .top-link { display: none; }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --theme: #1f1e1d; --entry: #262624;
+          --primary: #f5f4ef; --secondary: #a5a199;
+          --tertiary: #302e2b; --content: #e3e1da;
+          --code-block-bg: #262624; --code-bg: #2b2a28;
+          --border: #3a3835; --accent: #d97757; --accent-hover: #e8906f;
+          --border-hover: #4c4945; --callout: #2b2724; color-scheme: dark;
+        }
+        .list { background: var(--theme); }
+        .toc { background: var(--entry); }
+      }
+    </style></noscript><script>
+    // 首屏前定主题，避免深色模式闪白
+    if (localStorage.getItem('pref-theme') === 'dark') {
+      document.documentElement.dataset.theme = 'dark';
+    } else if (localStorage.getItem('pref-theme') === 'light') {
+      document.documentElement.dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      document.documentElement.dataset.theme = 'dark';
+    } else {
+      document.documentElement.dataset.theme = 'light';
+    }
+  </script><script async src="https://www.googletagmanager.com/gtag/js?id=G-CD5WNDM72B"></script><script>(function(){const gaId = "G-CD5WNDM72B";
+
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', gaId);
+  })();</script><link rel="stylesheet" href="/_astro/_slug_.k9VlTr2X.css"></head> <body id="top"> <header class="header"> <nav class="header-nav"> <div class="logo"> <a href="/" accesskey="h" title="Stanley's Blog (Alt + H)"> <img src="/images/catmeme1.jpeg" alt="" aria-label="logo" height="20">Stanley&#39;s Blog</a> <div class="logo-switches"> <button id="theme-toggle" class="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme"> <svg class="moon" width="17" height="17" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg> <svg class="sun" width="17" height="17" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg> </button> </div> </div> <ul id="menu" class="menu"> <li> <a href="/about/" title="About"> <span>About</span> </a> </li><li> <a href="/categories/" title="Categories"> <span>Categories</span> </a> </li><li> <a href="/tags/" title="Tags"> <span>Tags</span> </a> </li> </ul> </nav> </header> <main class="main">  <article class="post-single"> <header class="post-header"> <nav class="breadcrumbs" role="navigation" aria-label="Breadcrumb"> <a href="/">Home</a> <svg class="feather feather-chevron-right" width="24" height="24" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>  <a href="/posts/">Posts</a> <svg class="feather feather-chevron-right" width="24" height="24" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>  </nav> <h1 class="post-title entry-hint-parent">🐱给小白的Shadowsocks翻墙教程</h1> <div class="post-description">从零开始搭建 Shadowsocks：购买 Vultr VPS、选择 Debian 12、一键脚本安装 libev 服务端，到 Windows/macOS 客户端配置，全程图文，小白也能照着做。</div> <div class="post-meta"> <span title="2026-09-04 23:09:49 +0800">September 4, 2026</span>&nbsp;·&nbsp;<span>2 min</span>&nbsp;·&nbsp;<span>300 words</span>&nbsp;·&nbsp;<span>Stanley Zhao</span> </div> </header> <div class="post-content md-content">  <p><a href="/Shadowsocks-Tutorial-en/">🌏English</a></p>
+<p><strong><a href="https://github.com/zhaoweih/Shadowsocks-Tutorial/wiki/%E7%9B%AE%E5%BD%95">全部文章目录</a></strong></p>
+<blockquote>
+<p>🚀安装成功后如果想加速Shadowsocks的小伙伴可以看看我这篇文章<a href="https://github.com/zhaoweih/Shadowsocks-Tutorial/blob/main/kcptun_shadowsocks_tutorial.md">给小白的kcptun加速shadowsocks教程</a>(效果很明显)</p>
+<p>如果过程中出现问题无法解决可以发送邮件到我邮箱<a href="mailto:zhaoweihao.dev@gmail.com">zhaoweihao.dev@gmail.com</a>  或者<a href="https://github.com/zhaoweih/Shadowsocks-Tutorial/issues">提issues</a></p>
+<p>如果工程师朋友们需要加速git克隆速度可以查看这篇文章<a href="https://github.com/zhaoweih/Shadowsocks-Tutorial/blob/main/git/git_shadowsocks_readme.md">给小白的git配置shadowsocks代理加速教程</a></p>
+</blockquote>
+<h1 id="前言">前言<a hidden class="anchor" aria-hidden="true" href="#前言">#</a></h1>
+<p>为什么要做这个库？因为有句话说“不会翻墙的程序员不是好程序员”，但是某些原因，翻墙可是越来越难了，我之前是用某灯，但是自从上个月开始某灯也不稳定了；我还以为可以和某灯相宿相飞一段时间的，后来就投靠了Shadowsocks了，为什么会选择Shadowsocks呢，因为可以自己搭建服务器，不再受牵制，而且由于是个人服务器被封IP的几率也不会很大；当然你也可以和自己信任的人共享使用，但是Shadowsocks的教程网络上真是参次不齐，很容易误导那些只想翻墙而不是要了解它原理的人，所以我就蹦出个想法：做个几乎是一键式的傻瓜Shadowsocks（以下简称ss）搭建教程给小白们，让大家都能共享自由的互联网。</p>
+<h1 id="开始">开始<a hidden class="anchor" aria-hidden="true" href="#开始">#</a></h1>
+<h2 id="购买vps服务器">购买VPS服务器<a hidden class="anchor" aria-hidden="true" href="#购买vps服务器">#</a></h2>
+<p>俗话说，万事起头难。想想倒也是这样，也不是说购买VPS服务器有多难，是接受它比较难，我当时也是一个还没买过服务器的小白，对于第一次尝试的东西都没有底，怎么敢随意下手。好了，你现在可以放心了，据我使用，Vultr和DigitalOcean这两个服务商都是可以随时部署随时摧毁服务器，是按每小时计费的，一个月是5美金，大概0.007美金一小时，就算你创建一个服务器IP刚好是被某墙屏蔽了，那就删掉也只是扣0.1美金，作为一个穷学生的我都能接受了，你还犹豫吗？</p>
+<h3 id="1注册并登录">1、注册并登录<a hidden class="anchor" aria-hidden="true" href="#1注册并登录">#</a></h3>
+<p><a href="https://www.vultr.com/?ref=7370522"><img src="/images/logo_onwhite.svg" alt="Vultr"></a></p>
+<p>Vultr推荐链接：<a href="https://www.vultr.com/?ref=7370522">https://www.vultr.com/?ref=7370522</a></p>
+<p>这里我比较推荐Vultr，为什么呢？因为他有日本服务器，延迟低，掉包也低； 注册登录后先充值5美金，用paypal绑定国内银行卡可以最低充值5美金，当然也有支付宝，支付宝要最低10美金。</p>
+<p><img src="/images/make_a_payment.png" alt="Vultr 充值页面"></p>
+<h3 id="2部署服务器">2、部署服务器<a hidden class="anchor" aria-hidden="true" href="#2部署服务器">#</a></h3>
+<p>第一步：在个人页面点击Products然后再点右面的➕号按钮添加一个服务器</p>
+<p><img src="/images/choose_server.png" alt="Vultr 控制台 Products 页面点击加号新建服务器"></p>
+<p>在右上角选择<strong>Switch back to the old experience for a limited time</strong>切换回经典视图</p>
+<p><img src="/images/switch_back.png" alt="点击右上角 Switch back to the old experience 切回经典视图"></p>
+<p>选择<strong>Cloud Compute</strong></p>
+<p><img src="/images/choose_type.png" alt="Choose Type 页面选中 Cloud Compute - Shared CPU"></p>
+<p>第二步：在打开的页面选择德国Frankfurt服务器 (由于日本服务器滥用导致很多IP被封了，可以选择欧洲服务器，例如法国、德国等) ，如果喜欢其他服务器也可以选择，后续操作是一样一样的</p>
+<p><img src="/images/choose_location.png" alt="机房位置选择页面，选中德国 Frankfurt"></p>
+<p>第三步：接下来要注意了，系统最好选择<strong>Debian 12 x64</strong>，点击Debian可以下拉选择12 x64</p>
+<p><img src="/images/choose_system.png" alt="操作系统选择 Debian，下拉选中 12 x64"></p>
+<p>第四步：选择套餐，当然ss不需要配置太高的服务器，最低配置5美金一个月的就可以了，反正我每次看2.5美金都是卖光的，如果你能看到那赶紧选啊，千年一遇。</p>
+<p><img src="/images/choose_plan.png" alt="套餐选择页面，选择每月 5 美元的最低配置"></p>
+<p>记得<strong>取消选中自动备份</strong>(会收1美金/月)</p>
+<p><img src="/images/auto_backup.png" alt="取消勾选每月 1 美元的自动备份选项"></p>
+<p>第五步：接着就是部署起来了，当然你也可以给服务器起个名字再部署</p>
+<p><img src="/images/6.png" alt="Vultr 部署页面，可为服务器命名后点击部署"></p>
+<p>第六步：接着等待服务器启动完成，看到Status是绿色的Running就是启动完成了，这个过程大概需要1-3分钟。</p>
+<p><img src="/images/7.png" alt="Vultr 服务器列表中状态显示为绿色的 Running"></p>
+<p>第七步：复制IP地址和密码，后面有用</p>
+<p><img src="/images/server_info.png" alt="服务器详情页中的 IP 地址与 root 密码"></p>
+<p>第八步：启动完成后，当然测试一下有没有被封掉IP了，打开命令管理器或者终端，输入 ping+你的IP地址，例如我服务器IP是8.8.8.8，则ping 8.8.8.8，如果出现下图的返回信息则这个IP是可以用的，偶尔一个request timeout也是可以的，是掉包现象，如果出现一直request timeout就把这服务器删掉重新部署吧。</p>
+<p><img src="/images/10.png" alt="ping 服务器 IP 返回正常，说明该 IP 未被封锁"></p>
+<p>好了，到此为止最困难的事情已经过去了，后面都是一键式的了，喝杯茶🍵再继续。</p>
+<h2 id="在服务器安装ss">在服务器安装ss<a hidden class="anchor" aria-hidden="true" href="#在服务器安装ss">#</a></h2>
+<p>因为我是用mac的，考虑到大多数人还是使用windows为主，我就把我的旧电脑给翻出来开机继续做教程。基于windows 7。</p>
+<ul>
+<li><strong>如果你是用mac，那恭喜你，下面连接的步骤直接打开终端输入</strong></li>
+</ul>
+<p><code>ssh root@你的服务器IP地址</code></p>
+<p><strong>连接就可以，然后可以跳过安装并运行xshell这个步骤</strong></p>
+<ul>
+<li><strong>如果你是用windows10,可以打开系统自带的powershell工具:</strong></li>
+</ul>
+<p><img src="/images/powershell_windows_menu.png" alt="在 Windows 开始菜单中找到并打开 PowerShell"></p>
+<p><strong>输入</strong></p>
+<p><code>ssh root@你的服务器IP地址</code></p>
+<p><img src="/images/powershell_run.png" alt="在 PowerShell 中执行 ssh root@服务器IP 连接服务器"></p>
+<p><strong>连接就可以，然后可以跳过安装并运行xshell这个步骤</strong></p>
+<h3 id="安装并运行xshell">安装并运行xshell<a hidden class="anchor" aria-hidden="true" href="#安装并运行xshell">#</a></h3>
+<p><strong>提示：如果服务器可以ping通，但xshell无法连接说明服务器被封端口了（很多vultr日本服务器有这种状况），请更换其他地区服务器或者更换服务器商</strong></p>
+<p>windows下ssh连接需要下载Xshell，百度搜一搜就能下载了，当然你也可以用其他的，这里以Xshell为例，安装好Xshell后点击文件-新建</p>
+<p><img src="/images/w-1.png" alt="Xshell 中通过文件-新建创建会话"></p>
+<p>接下来配置连接,名称随便起，主机填写你的服务器IP地址，下面都默认就好</p>
+<p><img src="/images/w-2.png" alt="Xshell 新建会话，填写名称与服务器 IP 地址"></p>
+<p>接下来在弹出的窗口填root（默认服务器用户名）</p>
+<p><img src="/images/w-3.png" alt="Xshell 登录窗口填写用户名 root"></p>
+<p>这里就要填入你在上篇复制的服务器密码了</p>
+<p><img src="/images/w-4.png" alt="Xshell 登录窗口填写服务器密码"></p>
+<h3 id="安装ss">安装ss<a hidden class="anchor" aria-hidden="true" href="#安装ss">#</a></h3>
+<p>上面登录成功后如图所示</p>
+<p><img src="/images/w-5.png" alt="Xshell 成功登录服务器后的界面"></p>
+<p>下面就是精髓的部分了，感谢<a href="https://github.com/teddysun">@teddysun</a>大佬制作的一键安装脚本，具体更多细节可查看博客：<a href="https://teddysun.com/486.html">https://teddysun.com/486.html</a>  (由于大佬的<a href="https://teddysun.com/548.html">退出</a>,所以下面的命令目前还可以使用，但是版本已经不再更新)</p>
+<p>#同时感谢<a href="https://github.com/zhaoweih/Shadowsocks-Tutorial/issues/72#issuecom#ent-3017717903">@peinuanqin-nus</a> 提供的脚本修复方案</p>
+<div class="highlight"><pre class="astro-code catppuccin-macchiato chroma" style="color:#cad3f5; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#8AADF4;font-style:italic">wget</span><span style="color:#A6DA95"> --no-check-certificate</span><span style="color:#A6DA95"> -O</span><span style="color:#A6DA95"> shadowsocks-all.sh</span><span style="color:#A6DA95"> https://raw.githubusercontent.com/zhaoweih/Shadowsocks-Tutorial/main/sh/shadowsocks-all.sh</span></span>
+<span class="line"><span style="color:#8AADF4;font-style:italic">chmod</span><span style="color:#A6DA95"> +x</span><span style="color:#A6DA95"> shadowsocks-all.sh</span></span>
+<span class="line"><span style="color:#8AADF4;font-style:italic">./shadowsocks-all.sh</span><span style="color:#8BD5CA"> 2>&#x26;1</span><span style="color:#8BD5CA"> |</span><span style="color:#8AADF4;font-style:italic"> tee</span><span style="color:#A6DA95"> shadowsocks-all.log</span></span></code></pre></div>
+<p>复制粘贴上面代码到xshell，在xshell要右键粘贴，然后就会有一大串不知名代码蹦出，停在这里了</p>
+<p><img src="/images/w-6.png" alt="在 Xshell 中粘贴一键安装脚本后的输出"></p>
+<p>这时候按一下<strong>Enter回车键</strong>它又可以继续了～</p>
+<p>接着又蹦出些东西，是让我们选择ss的服务器端，这里我选择libev版本的，输入<strong>4</strong>按回车</p>
+<p><img src="/images/libev/1.png" alt="脚本询问服务端版本，输入 4 选择 libev"></p>
+<p>如同往常，接下来是要填入ss客户端登录的密码，这里我随意填：<strong>abc123456</strong></p>
+<p><img src="/images/libev/2.png" alt="设置 Shadowsocks 的连接密码"></p>
+<p>接下来是输入端口号（1-65535任意数字），这里我随便填个<strong>12853</strong>的</p>
+<p><img src="/images/libev/3.png" alt="设置 Shadowsocks 的端口号"></p>
+<p>接下来是选择加密方式，最好选择xchacha20-ietf-poly1305，输入<strong>13</strong></p>
+<p><img src="/images/libev/4.png" alt="加密方式选择，输入 13 选中 xchacha20-ietf-poly1305"></p>
+<p>接着是否需要开启simply-obfs插件，默认就行，<strong>回车</strong></p>
+<p><img src="/images/libev/5.png" alt="询问是否开启混淆插件，直接回车保持默认"></p>
+<p>接着又是反手一个<strong>回车</strong>就好</p>
+<p><img src="/images/libev/6.png" alt="脚本的下一个确认提示，直接回车继续"></p>
+<p>这里可能需要等待一会，看到下图就是大功告成了。干杯🍻！</p>
+<p>这个最好截图一下，以防忘记了。</p>
+<p>我就当大家英文水平还好吧，下面说的就是你的服务器IP，服务器端端口，密码，加密方式。</p>
+<p><img src="/images/libev/7.png" alt="安装完成后输出的服务器 IP、端口、密码与加密方式"></p>
+<p>⚠️注意：最后需要关闭下系统的防火墙，粘贴下面的命令然后回车就行</p>
+<div class="highlight"><pre class="astro-code catppuccin-macchiato chroma" style="color:#cad3f5; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#8AADF4;font-style:italic">sudo</span><span style="color:#A6DA95"> ufw</span><span style="color:#A6DA95"> disable</span></span></code></pre></div>
+<h2 id="下载客户端">下载客户端<a hidden class="anchor" aria-hidden="true" href="#下载客户端">#</a></h2>
+<p>如果你跟着我到了这一步就代表安装好了服务器端，但是我们的电脑手机作为客户端也是需要安装客户端软件的。下面是各个终端的下载地址（我用过Windows,MAC,Android,IOS操作起来都是差不多的。）：</p>
+<p>Windows：<a href="https://github.com/shadowsocks/shadowsocks-windows/releases">https://github.com/shadowsocks/shadowsocks-windows/releases</a></p>
+<p>Android:<a href="https://github.com/shadowsocks/shadowsocks-android/releases">https://github.com/shadowsocks/shadowsocks-android/releases</a></p>
+<p>MAC:<a href="https://github.com/shadowsocks/ShadowsocksX-NG/releases">https://github.com/shadowsocks/ShadowsocksX-NG/releases</a></p>
+<p>Linux:<a href="https://github.com/shadowsocks/shadowsocks-qt5/wiki/Installation">https://github.com/shadowsocks/shadowsocks-qt5/wiki/Installation</a></p>
+<p>IOS:</p>
+<p>由于国区APP下架VPN类APP，包括支持ss类的APP，所以需要切换账号</p>
+<p>建议注册一个国外账号，不要国内账号换区，这样既可以需要下载国内APP时切换国区账号，需要下载国外APP时切换外区账号。</p>
+<p><strong>建议不想折腾的可以淘宝买一个国外App Store账号，便宜方便快捷</strong></p>
+<p>步骤：</p>
+<p>1.获取一个国区以外的账号</p>
+<p>注册国外appid教程：<a href="https://www.zhihu.com/question/26458172">https://www.zhihu.com/question/26458172</a></p>
+<p>（相关注册外区账号教程很多，可以自行搜索）</p>
+<p><strong>由于苹果的新政策，注册apple id在付款方式选择的时候非当地ip无法选择none选项，例如我注册英国区账号，需要ip为英国才可以。即在注册时要搭梯子，对应ip注册。</strong></p>
+<p>2.在APPStore中切换为国区以外账号</p>
+<p>3.在AppStore搜索<strong>Potatso Lite</strong>安装</p>
+<p>注：或者其他支持shadowsocks的APP也可以，这里比较推荐Potatso Lite</p>
+<ul>
+<li><a href="https://itunes.apple.com/us/app/potatso-lite/id1239860606?mt=8">Potatso Lite</a></li>
+</ul>
+<p><strong>下面以windows为例演示：</strong></p>
+<p>打开上方网址下载客户端：</p>
+<p><img src="/images/libev/9.png" alt="Shadowsocks Windows 客户端的下载页面"></p>
+<p>接着解压后打开Shadowsocks.exe，右击右下角小飞机，点击服务器-编辑服务器：</p>
+<p><img src="/images/edit_server.png" alt="右键任务栏 Shadowsocks 图标，选择服务器-编辑服务器"></p>
+<p>还记得上面建议保存的图片吗？这里就用到了，服务器IP，端口，密码，加密方式，然后点击确定</p>
+<p><img src="/images/libev/8.png" alt="在客户端中填入服务器 IP、端口、密码与加密方式"></p>
+<p>最后确保打开了PAC模式：</p>
+<p><img src="/images/super_easy_shadowsocks_tutorial/21.png" alt="在客户端右键菜单中启用 PAC 模式"></p>
+<ul>
+<li>这里简要说一下PAC模式和全局模式问题：</li>
+</ul>
+<p>PAC模式就是访问国内网站会走国内IP，访问被封的网站走服务器IP</p>
+<p>全局就是全部走服务器IP</p>
+<p>这里建议选择PAC模式，PAC的地址都是保存在<a href="https://github.com/gfwlist/gfwlist">gfwlist</a></p>
+<p>希望大家遇到PAC无法访问的网站多上去提issues。</p>
+<h3 id="神圣时刻">神圣时刻<a hidden class="anchor" aria-hidden="true" href="#神圣时刻">#</a></h3>
+<p>接着最神圣的时刻来了，在浏览器输入google.com，回车，蹦，谷歌回来了</p>
+<p><img src="/images/w-16.png" alt="浏览器成功打开 Google 首页"></p>
+<h1 id="补充">补充<a hidden class="anchor" aria-hidden="true" href="#补充">#</a></h1>
+<h2 id="设置多端口">设置多端口<a hidden class="anchor" aria-hidden="true" href="#设置多端口">#</a></h2>
+<p><a href="https://stanleyzhao.xyz/2019/06/01/%E5%A6%82%E4%BD%95%E5%90%AF%E7%94%A8Shadowsocks%E7%9A%84%E5%A4%9A%E7%AB%AF%E5%8F%A3/">如何启用 Shadowsocks 的多端口</a></p>
+<h2 id="常用命令">常用命令<a hidden class="anchor" aria-hidden="true" href="#常用命令">#</a></h2>
+<p>start 启动
+stop 停止
+restart 重启
+status 状态</p>
+<h3 id="shadowsocks-libev-版">Shadowsocks-libev 版：<a hidden class="anchor" aria-hidden="true" href="#shadowsocks-libev-版">#</a></h3>
+<div class="highlight"><pre class="astro-code catppuccin-macchiato chroma" style="color:#cad3f5; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#8AADF4;font-style:italic">/etc/init.d/shadowsocks-libev</span><span style="color:#A6DA95"> start</span></span>
+<span class="line"><span style="color:#8AADF4;font-style:italic">/etc/init.d/shadowsocks-libev</span><span style="color:#A6DA95"> stop</span></span>
+<span class="line"><span style="color:#8AADF4;font-style:italic">/etc/init.d/shadowsocks-libev</span><span style="color:#A6DA95"> restart</span></span>
+<span class="line"><span style="color:#8AADF4;font-style:italic">/etc/init.d/shadowsocks-libev</span><span style="color:#A6DA95"> status</span></span></code></pre></div>
+<h3 id="shadowsocks-python-版">Shadowsocks-Python 版：<a hidden class="anchor" aria-hidden="true" href="#shadowsocks-python-版">#</a></h3>
+<div class="highlight"><pre class="astro-code catppuccin-macchiato chroma" style="color:#cad3f5; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#8AADF4;font-style:italic">/etc/init.d/shadowsocks-python</span><span style="color:#A6DA95"> start</span></span>
+<span class="line"><span style="color:#8AADF4;font-style:italic">/etc/init.d/shadowsocks-python</span><span style="color:#A6DA95"> stop</span></span>
+<span class="line"><span style="color:#8AADF4;font-style:italic">/etc/init.d/shadowsocks-python</span><span style="color:#A6DA95"> restart</span></span>
+<span class="line"><span style="color:#8AADF4;font-style:italic">/etc/init.d/shadowsocks-python</span><span style="color:#A6DA95"> status</span></span></code></pre></div>
+<h3 id="shadowsocksr-版">ShadowsocksR 版：<a hidden class="anchor" aria-hidden="true" href="#shadowsocksr-版">#</a></h3>
+<div class="highlight"><pre class="astro-code catppuccin-macchiato chroma" style="color:#cad3f5; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#8AADF4;font-style:italic">/etc/init.d/shadowsocks-r</span><span style="color:#A6DA95"> start</span></span>
+<span class="line"><span style="color:#8AADF4;font-style:italic">/etc/init.d/shadowsocks-r</span><span style="color:#A6DA95"> stop</span></span>
+<span class="line"><span style="color:#8AADF4;font-style:italic">/etc/init.d/shadowsocks-r</span><span style="color:#A6DA95"> restart</span></span>
+<span class="line"><span style="color:#8AADF4;font-style:italic">/etc/init.d/shadowsocks-r</span><span style="color:#A6DA95"> status</span></span></code></pre></div>
+<h3 id="shadowsocks-go-版">Shadowsocks-Go 版：<a hidden class="anchor" aria-hidden="true" href="#shadowsocks-go-版">#</a></h3>
+<div class="highlight"><pre class="astro-code catppuccin-macchiato chroma" style="color:#cad3f5; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#8AADF4;font-style:italic">/etc/init.d/shadowsocks-go</span><span style="color:#A6DA95"> start</span></span>
+<span class="line"><span style="color:#8AADF4;font-style:italic">/etc/init.d/shadowsocks-go</span><span style="color:#A6DA95"> stop</span></span>
+<span class="line"><span style="color:#8AADF4;font-style:italic">/etc/init.d/shadowsocks-go</span><span style="color:#A6DA95"> restart</span></span>
+<span class="line"><span style="color:#8AADF4;font-style:italic">/etc/init.d/shadowsocks-go</span><span style="color:#A6DA95"> status</span></span></code></pre></div>
+<h2 id="如何卸载">如何卸载<a hidden class="anchor" aria-hidden="true" href="#如何卸载">#</a></h2>
+<p>运行如下命令，根据提示，选择对应版本卸载</p>
+<div class="highlight"><pre class="astro-code catppuccin-macchiato chroma" style="color:#cad3f5; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#8AADF4;font-style:italic">./shadowsocks-all.sh</span><span style="color:#A6DA95"> uninstall</span></span></code></pre></div>
+<h1 id="最后">最后<a hidden class="anchor" aria-hidden="true" href="#最后">#</a></h1>
+<p>最后，这里我们的任务完成了，但是如果你想优化一下服务器连接，可以安装BBR加速。具体可以看这篇文章：<a href="https://teddysun.com/489.html">文章</a></p>
+<blockquote>
+<p>使用root用户登录，运行以下命令：</p>
+<div class="highlight"><pre class="astro-code catppuccin-macchiato chroma" style="color:#cad3f5; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#8AADF4;font-style:italic">wget</span><span style="color:#A6DA95"> --no-check-certificate</span><span style="color:#A6DA95"> https://github.com/teddysun/across/raw/master/bbr.sh</span><span style="color:#939AB7"> &#x26;&#x26;</span><span style="color:#8AADF4;font-style:italic"> chmod</span><span style="color:#A6DA95"> +x</span><span style="color:#A6DA95"> bbr.sh</span><span style="color:#939AB7"> &#x26;&#x26;</span><span style="color:#8AADF4;font-style:italic"> ./bbr.sh</span></span></code></pre></div>
+<p>安装完成后，脚本会提示需要重启 VPS，输入 y 并回车后重启。</p>
+</blockquote>
+<h1 id="qa">Q&#x26;A<a hidden class="anchor" aria-hidden="true" href="#qa">#</a></h1>
+<p>汇总一些邮件反馈的问题</p>
+<p><strong>[已解决]1.问题：-bash: wget: command not found
+环境：服务器：linode，新加坡服务器，cent os7</strong></p>
+<p>可以参照这篇文章安装wget后尝试：<a href="https://www.wn789.com/5624.html">https://www.wn789.com/5624.html</a></p>
+<p><strong>[已解决]2.问题:当访问Google学术时，会提示 :
+"We are sorry, but your computer or network may be sending automated queries. To protect our users, we can't process your request right now "</strong></p>
+<p>由于谷歌有自己的一套反代理爬虫的机制，所以很多 VPS 的 ip 会被谷歌检测到是代理，遇到这种情况可以用更换服务器即可，如果没有其他服务器可用，可以用<strong>谷歌学术镜像</strong>。</p>
+<p><strong>[已解决]3.[Error] Failed to install python</strong></p>
+<p>原因是安装脚本的依赖列表里写的是 Python 2 的包名（<code>python</code>/<code>python-dev</code>/<code>python-setuptools</code>），而这些包从 <strong>Debian 11、Ubuntu 20.04 起就已经被移除了</strong>，所以 apt 找不到包直接中断，即使你选的是 libev 版本也一样会卡在这里。</p>
+<p>脚本现已修复：会自动检测系统上有没有 Python 2，没有就改用 <code>python3</code> 系列的包。如果你用的是旧版脚本，重新下载一次即可。参考 <a href="https://github.com/zhaoweih/Shadowsocks-Tutorial/issues/27">#27</a></p>
+<p><strong>[已解决]4.可以ping通但是连不上</strong></p>
+<p>这个情况有可能是防火墙没关闭，因为现在vultr默认会打开防火墙，所以需要关闭防火墙端口才能通</p>
+<div class="highlight"><pre class="astro-code catppuccin-macchiato chroma" style="color:#cad3f5; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#8AADF4;font-style:italic">sudo</span><span style="color:#A6DA95"> ufw</span><span style="color:#A6DA95"> disable</span></span></code></pre></div>
+<p>执行后可以用<code>ufw status</code>查看是否已经关闭，显示inactive就是关闭了防火墙</p>
+<p>（<code>systemctl status firewalld</code>只适用于 CentOS 等使用 firewalld 的系统，Debian/Ubuntu 上会提示 <code>Unit firewalld.service could not be found</code>）</p>
+<p><img src="/images/firewall_inactive.png" alt="执行 ufw status 显示 inactive，防火墙已关闭"></p>
+<p><a href="https://tool.chinaz.com/port">在线检查端口是否开放</a></p>
+<h1 id="讨论">讨论<a hidden class="anchor" aria-hidden="true" href="#讨论">#</a></h1>
+<h2 id="discord">Discord<a hidden class="anchor" aria-hidden="true" href="#discord">#</a></h2>
+<p><strong>我创建了一个Discord讨论组，遇到问题的小伙伴可以一起讨论</strong></p>
+<p><a href="https://discord.gg/wHFxCVk"><img src="/images/discord.svg" alt="Discord"></a></p>
+<h1 id="更多">更多<a hidden class="anchor" aria-hidden="true" href="#更多">#</a></h1>
+<p><strong>如果想详细了解有关shadowsocks翻墙知识的小伙伴可以查看下面文章</strong></p>
+<ul>
+<li><a href="https://medium.com/@thomas_summon/%E6%B5%85%E8%B0%88vpn-vps-proxy%E4%BB%A5%E5%8F%8Ashadowsocks%E4%B9%8B%E9%97%B4%E7%9A%84%E8%81%94%E7%B3%BB%E5%92%8C%E5%8C%BA%E5%88%AB-b0198f92db1b">浅谈vpn、vps、Proxy以及shadowsocks之间的联系和区别</a></li>
+</ul>
+<h1 id="建议">建议<a hidden class="anchor" aria-hidden="true" href="#建议">#</a></h1>
+<p>如果大家对这篇文章有任何疑问都可以提<a href="https://github.com/zhaoweih/Shadowsocks-Tutorial/issues">issues</a>，如果你有其他更简单或者其他方法翻墙也可以pull requests。</p>
+<h1 id="关于">关于<a hidden class="anchor" aria-hidden="true" href="#关于">#</a></h1>
+<p>我是一名初入社会的社畜，一个追求自由的少年，如果想要找我，可以给我发邮件📧</p>
+<p>📮我的邮箱：<a href="mailto:zhaoweihao.dev@gmail.com">zhaoweihao.dev@gmail.com</a></p>
+<h1 id="赞赏">赞赏<a hidden class="anchor" aria-hidden="true" href="#赞赏">#</a></h1>
+<p>我目前生活还是蛮自如的，有吃的有喝的，就不用赞赏了。喜欢就给我个star或者fork一下吧❤️，谢谢！</p>  </div> <footer class="post-footer"> <ul class="post-tags"> <li><a href="/tags/shadowsocks/">Shadowsocks</a></li><li><a href="/tags/chatgpt/">ChatGPT</a></li><li><a href="/tags/bypass/">bypass</a></li><li><a href="/tags/gfw/">gfw</a></li><li><a href="/tags/china/">China</a></li><li><a href="/tags/vultr/">vultr</a></li><li><a href="/tags/翻墙/">翻墙</a></li><li><a href="/tags/教程/">教程</a></li><li><a href="/tags/小白/">小白</a></li> </ul> <nav class="paginav"><a class="prev" href="/Shadowsocks-Tutorial-en/"><span class="title">« </span><span>🐱Shadowsocks Tutorial for Beginners</span></a></nav> <ul class="share-buttons"> <li> <a target="_blank" rel="noopener noreferrer" aria-label="share 🐱给小白的Shadowsocks翻墙教程 on x" href="https://x.com/intent/tweet/?text=%F0%9F%90%B1%E7%BB%99%E5%B0%8F%E7%99%BD%E7%9A%84Shadowsocks%E7%BF%BB%E5%A2%99%E6%95%99%E7%A8%8B&url=https%3A%2F%2Fzhaoweih.github.io%2FShadowsocks-Tutorial%2F&hashtags=Shadowsocks%2CChatGPT%2Cbypass%2Cgfw%2CChina%2Cvultr%2C%E7%BF%BB%E5%A2%99%2C%E6%95%99%E7%A8%8B%2C%E5%B0%8F%E7%99%BD"> <svg version="1.1" viewBox="0 0 512 512" height="30px" width="30px" fill="currentColor"><path d="M512 62.554 L 512 449.446 C 512 483.97 483.97 512 449.446 512 L 62.554 512 C 28.03 512 0 483.97 0 449.446 L 0 62.554 C 0 28.03 28.029 0 62.554 0 L 449.446 0 C 483.971 0 512 28.03 512 62.554 Z M 269.951 190.75 L 182.567 75.216 L 56 75.216 L 207.216 272.95 L 63.9 436.783 L 125.266 436.783 L 235.9 310.383 L 332.567 436.783 L 456 436.783 L 298.367 228.367 L 432.367 75.216 L 371.033 75.216 Z M 127.633 110 L 164.101 110 L 383.481 400.065 L 349.5 400.065 Z" /></svg> </a> </li><li> <a target="_blank" rel="noopener noreferrer" aria-label="share 🐱给小白的Shadowsocks翻墙教程 on linkedin" href="https://www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Fzhaoweih.github.io%2FShadowsocks-Tutorial%2F&title=%F0%9F%90%B1%E7%BB%99%E5%B0%8F%E7%99%BD%E7%9A%84Shadowsocks%E7%BF%BB%E5%A2%99%E6%95%99%E7%A8%8B&summary=%F0%9F%90%B1%E7%BB%99%E5%B0%8F%E7%99%BD%E7%9A%84Shadowsocks%E7%BF%BB%E5%A2%99%E6%95%99%E7%A8%8B&source=https%3A%2F%2Fzhaoweih.github.io%2FShadowsocks-Tutorial%2F"> <svg version="1.1" viewBox="0 0 512 512" height="30px" width="30px" fill="currentColor"><path d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-288.985,423.278l0,-225.717l-75.04,0l0,225.717l75.04,0Zm270.539,0l0,-129.439c0,-69.333 -37.018,-101.586 -86.381,-101.586c-39.804,0 -57.634,21.891 -67.617,37.266l0,-31.958l-75.021,0c0.995,21.181 0,225.717 0,225.717l75.02,0l0,-126.056c0,-6.748 0.486,-13.492 2.474,-18.315c5.414,-13.475 17.767,-27.434 38.494,-27.434c27.135,0 38.007,20.707 38.007,51.037l0,120.768l75.024,0Zm-307.552,-334.556c-25.674,0 -42.448,16.879 -42.448,39.002c0,21.658 16.264,39.002 41.455,39.002l0.484,0c26.165,0 42.452,-17.344 42.452,-39.002c-0.485,-22.092 -16.241,-38.954 -41.943,-39.002Z" /></svg> </a> </li><li> <a target="_blank" rel="noopener noreferrer" aria-label="share 🐱给小白的Shadowsocks翻墙教程 on reddit" href="https://reddit.com/submit?url=https%3A%2F%2Fzhaoweih.github.io%2FShadowsocks-Tutorial%2F&title=%F0%9F%90%B1%E7%BB%99%E5%B0%8F%E7%99%BD%E7%9A%84Shadowsocks%E7%BF%BB%E5%A2%99%E6%95%99%E7%A8%8B"> <svg version="1.1" viewBox="0 0 512 512" height="30px" width="30px" fill="currentColor"><path d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-3.446,265.638c0,-22.964 -18.616,-41.58 -41.58,-41.58c-11.211,0 -21.361,4.457 -28.841,11.666c-28.424,-20.508 -67.586,-33.757 -111.204,-35.278l18.941,-89.121l61.884,13.157c0.756,15.734 13.642,28.29 29.56,28.29c16.407,0 29.706,-13.299 29.706,-29.701c0,-16.403 -13.299,-29.702 -29.706,-29.702c-11.666,0 -21.657,6.792 -26.515,16.578l-69.105,-14.69c-1.922,-0.418 -3.939,-0.042 -5.585,1.036c-1.658,1.073 -2.811,2.761 -3.224,4.686l-21.152,99.438c-44.258,1.228 -84.046,14.494 -112.837,35.232c-7.468,-7.164 -17.589,-11.591 -28.757,-11.591c-22.965,0 -41.585,18.616 -41.585,41.58c0,16.896 10.095,31.41 24.568,37.918c-0.639,4.135 -0.99,8.328 -0.99,12.576c0,63.977 74.469,115.836 166.33,115.836c91.861,0 166.334,-51.859 166.334,-115.836c0,-4.218 -0.347,-8.387 -0.977,-12.493c14.564,-6.47 24.735,-21.034 24.735,-38.001Zm-119.474,108.193c-20.27,20.241 -59.115,21.816 -70.534,21.816c-11.428,0 -50.277,-1.575 -70.522,-21.82c-3.007,-3.008 -3.007,-7.882 0,-10.889c3.003,-2.999 7.882,-3.003 10.885,0c12.777,12.781 40.11,17.317 59.637,17.317c19.522,0 46.86,-4.536 59.657,-17.321c3.016,-2.999 7.886,-2.995 10.885,0.008c3.008,3.011 3.003,7.882 -0.008,10.889Zm-5.23,-48.781c-16.373,0 -29.701,-13.324 -29.701,-29.698c0,-16.381 13.328,-29.714 29.701,-29.714c16.378,0 29.706,13.333 29.706,29.714c0,16.374 -13.328,29.698 -29.706,29.698Zm-160.386,-29.702c0,-16.381 13.328,-29.71 29.714,-29.71c16.369,0 29.689,13.329 29.689,29.71c0,16.373 -13.32,29.693 -29.689,29.693c-16.386,0 -29.714,-13.32 -29.714,-29.693Z" /></svg> </a> </li><li> <a target="_blank" rel="noopener noreferrer" aria-label="share 🐱给小白的Shadowsocks翻墙教程 on facebook" href="https://facebook.com/sharer/sharer.php?u=https%3A%2F%2Fzhaoweih.github.io%2FShadowsocks-Tutorial%2F"> <svg version="1.1" viewBox="0 0 512 512" height="30px" width="30px" fill="currentColor"><path d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-106.468,0l0,-192.915l66.6,0l12.672,-82.621l-79.272,0l0,-53.617c0,-22.603 11.073,-44.636 46.58,-44.636l36.042,0l0,-70.34c0,0 -32.71,-5.582 -63.982,-5.582c-65.288,0 -107.96,39.569 -107.96,111.204l0,62.971l-72.573,0l0,82.621l72.573,0l0,192.915l-191.104,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Z" /></svg> </a> </li><li> <a target="_blank" rel="noopener noreferrer" aria-label="share 🐱给小白的Shadowsocks翻墙教程 on whatsapp" href="https://api.whatsapp.com/send?text=%F0%9F%90%B1%E7%BB%99%E5%B0%8F%E7%99%BD%E7%9A%84Shadowsocks%E7%BF%BB%E5%A2%99%E6%95%99%E7%A8%8B%20-%20https%3A%2F%2Fzhaoweih.github.io%2FShadowsocks-Tutorial%2F"> <svg version="1.1" viewBox="0 0 512 512" height="30px" width="30px" fill="currentColor"><path d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-58.673,127.703c-33.842,-33.881 -78.847,-52.548 -126.798,-52.568c-98.799,0 -179.21,80.405 -179.249,179.234c-0.013,31.593 8.241,62.428 23.927,89.612l-25.429,92.884l95.021,-24.925c26.181,14.28 55.659,21.807 85.658,21.816l0.074,0c98.789,0 179.206,-80.413 179.247,-179.243c0.018,-47.895 -18.61,-92.93 -52.451,-126.81Zm-126.797,275.782l-0.06,0c-26.734,-0.01 -52.954,-7.193 -75.828,-20.767l-5.441,-3.229l-56.386,14.792l15.05,-54.977l-3.542,-5.637c-14.913,-23.72 -22.791,-51.136 -22.779,-79.287c0.033,-82.142 66.867,-148.971 149.046,-148.971c39.793,0.014 77.199,15.531 105.329,43.692c28.128,28.16 43.609,65.592 43.594,105.4c-0.034,82.149 -66.866,148.983 -148.983,148.984Zm81.721,-111.581c-4.479,-2.242 -26.499,-13.075 -30.604,-14.571c-4.105,-1.495 -7.091,-2.241 -10.077,2.241c-2.986,4.483 -11.569,14.572 -14.182,17.562c-2.612,2.988 -5.225,3.364 -9.703,1.12c-4.479,-2.241 -18.91,-6.97 -36.017,-22.23c-13.314,-11.876 -22.304,-26.542 -24.916,-31.026c-2.612,-4.484 -0.279,-6.908 1.963,-9.14c2.016,-2.007 4.48,-5.232 6.719,-7.847c2.24,-2.615 2.986,-4.484 4.479,-7.472c1.493,-2.99 0.747,-5.604 -0.374,-7.846c-1.119,-2.241 -10.077,-24.288 -13.809,-33.256c-3.635,-8.733 -7.327,-7.55 -10.077,-7.688c-2.609,-0.13 -5.598,-0.158 -8.583,-0.158c-2.986,0 -7.839,1.121 -11.944,5.604c-4.105,4.484 -15.675,15.32 -15.675,37.364c0,22.046 16.048,43.342 18.287,46.332c2.24,2.99 31.582,48.227 76.511,67.627c10.685,4.615 19.028,7.371 25.533,9.434c10.728,3.41 20.492,2.929 28.209,1.775c8.605,-1.285 26.499,-10.833 30.231,-21.295c3.732,-10.464 3.732,-19.431 2.612,-21.298c-1.119,-1.869 -4.105,-2.99 -8.583,-5.232Z" /></svg> </a> </li><li> <a target="_blank" rel="noopener noreferrer" aria-label="share 🐱给小白的Shadowsocks翻墙教程 on telegram" href="https://telegram.me/share/url?text=%F0%9F%90%B1%E7%BB%99%E5%B0%8F%E7%99%BD%E7%9A%84Shadowsocks%E7%BF%BB%E5%A2%99%E6%95%99%E7%A8%8B&url=https%3A%2F%2Fzhaoweih.github.io%2FShadowsocks-Tutorial%2F"> <svg version="1.1" viewBox="2 2 28 28" height="30px" width="30px" fill="currentColor"><path d="M26.49,29.86H5.5a3.37,3.37,0,0,1-2.47-1,3.35,3.35,0,0,1-1-2.47V5.48A3.36,3.36,0,0,1,3,3,3.37,3.37,0,0,1,5.5,2h21A3.38,3.38,0,0,1,29,3a3.36,3.36,0,0,1,1,2.46V26.37a3.35,3.35,0,0,1-1,2.47A3.38,3.38,0,0,1,26.49,29.86Zm-5.38-6.71a.79.79,0,0,0,.85-.66L24.73,9.24a.55.55,0,0,0-.18-.46.62.62,0,0,0-.41-.17q-.08,0-16.53,6.11a.59.59,0,0,0-.41.59.57.57,0,0,0,.43.52l4,1.24,1.61,4.83a.62.62,0,0,0,.63.43.56.56,0,0,0,.4-.17L16.54,20l4.09,3A.9.9,0,0,0,21.11,23.15ZM13.8,20.71l-1.21-4q8.72-5.55,8.78-5.55c.15,0,.23,0,.23.16a.18.18,0,0,1,0,.06s-2.51,2.3-7.52,6.8Z" /></svg> </a> </li><li> <a target="_blank" rel="noopener noreferrer" aria-label="share 🐱给小白的Shadowsocks翻墙教程 on ycombinator" href="https://news.ycombinator.com/submitlink?t=%F0%9F%90%B1%E7%BB%99%E5%B0%8F%E7%99%BD%E7%9A%84Shadowsocks%E7%BF%BB%E5%A2%99%E6%95%99%E7%A8%8B&u=https%3A%2F%2Fzhaoweih.github.io%2FShadowsocks-Tutorial%2F"> <svg version="1.1" viewBox="0 0 512 512" height="30px" width="30px" fill="currentColor"><path d="M449.446 0C483.971 0 512 28.03 512 62.554L512 449.446C512 483.97 483.97 512 449.446 512L62.554 512C28.03 512 0 483.97 0 449.446L0 62.554C0 28.03 28.029 0 62.554 0L449.446 0ZM183.8767 87.9921H121.8427L230.6673 292.4508V424.0079H281.3328V292.4508L390.1575 87.9921H328.1233L256 238.2489z" /></svg> </a> </li> </ul> </footer> </article>  </main> <footer class="footer"> <span>&copy; 2026 <a href="/">Stanley&#39;s Blog</a></span> </footer> <a href="#top" id="top-link" class="top-link hidden" aria-label="go to top" title="Go to Top (Alt + G)" accesskey="g"> <svg class="feather feather-chevrons-up" width="24" height="24" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 11 12 6 7 11"></polyline><polyline points="17 18 12 13 7 18"></polyline></svg> </a> <script type="module">const c=document.getElementById("theme-toggle");c?.addEventListener("click",()=>{const e=document.documentElement,t=e.dataset.theme==="dark";e.dataset.theme=t?"light":"dark",localStorage.setItem("pref-theme",t?"light":"dark")});const n=document.getElementById("menu");if(n){const e=localStorage.getItem("menu-scroll-position");e&&(n.scrollLeft=parseInt(e,10)),n.addEventListener("scroll",()=>{localStorage.setItem("menu-scroll-position",String(n.scrollLeft))})}document.querySelectorAll('a[href^="#"]').forEach(e=>{e.addEventListener("click",t=>{t.preventDefault();const o=decodeURIComponent(e.getAttribute("href").substring(1));(o?document.getElementById(o):document.body)?.scrollIntoView({behavior:window.matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth"}),history.pushState(null,"",o?`#${o}`:" ")})});const l=document.getElementById("top-link");if(l){const e=()=>{const t=document.body.scrollTop||document.documentElement.scrollTop;l.classList.toggle("hidden",t<=800)};e(),window.addEventListener("scroll",e,{passive:!0})}</script> </body> </html>

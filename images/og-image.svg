@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#1d1e20"/>
+  <rect x="0" y="0" width="1200" height="6" fill="#8bd5ca"/>
+  <text x="90" y="270" font-family="-apple-system, Helvetica, Arial, sans-serif" font-size="86" font-weight="700" fill="#f5f5f5">Stanley&#39;s Blog</text>
+  <text x="90" y="350" font-family="-apple-system, Helvetica, Arial, sans-serif" font-size="40" fill="#9b9c9d">Android Developer &#128640; / &#10084; Freedom</text>
+  <text x="90" y="540" font-family="-apple-system, Helvetica, Arial, sans-serif" font-size="30" fill="#8bd5ca">zhaoweih.github.io</text>
+</svg>
